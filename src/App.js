@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
 
-/*NOTES:  To vary results of other two slots, vary speed/time in setInterval using Math.random*/
-
 const slotChoices = [
   "cherry",
   "banana",
@@ -21,8 +19,8 @@ class App extends React.Component {
     this.state = {
       content: slotChoices,
       reel1: {pick: "apple", index: 0, counter: 0, numberOfSpins: 12},
-      reel2: {pick: "apple", index: 0, counter: 0, numberOfSpins: 16},
-      reel3: {pick: "apple", index: 0, counter: 0, numberOfSpins: 20}
+      reel2: {pick: "coconut", index: 0, counter: 0, numberOfSpins: 16},
+      reel3: {pick: "durian", index: 0, counter: 0, numberOfSpins: 20}
     }
     this.reel1spin = null;
     this.reel2spin = null;
@@ -38,7 +36,7 @@ class App extends React.Component {
           { ...prevState.reel1,
             pick: arr[this.state.reel1.index],
             counter: prevState.reel1.counter + 1,
-            index: prevState.reel1.index < arr.length-1 ?
+            index: prevState.reel1.index < arr.length - 1 ?
             prevState.reel1.index + 1
             :
             0 }
@@ -58,7 +56,7 @@ class App extends React.Component {
           { ...prevState.reel2,
             pick: arr[this.state.reel2.index],
             counter: prevState.reel2.counter + 1,
-            index: prevState.reel2.index < arr.length-1 ?
+            index: prevState.reel2.index < arr.length - 1 ?
             prevState.reel2.index + 1
             :
             0 }
@@ -78,7 +76,7 @@ class App extends React.Component {
           { ...prevState.reel3,
             pick: arr[this.state.reel3.index],
             counter: prevState.reel3.counter + 1,
-            index: prevState.reel3.index < arr.length-1 ?
+            index: prevState.reel3.index < arr.length - 1 ?
             prevState.reel3.index + 1
             :
             0 }
@@ -87,11 +85,11 @@ class App extends React.Component {
 
     if (this.state.reel3.counter >= this.state.reel3.numberOfSpins) {
       clearInterval(this.reel3spin);
-      this.resetCount();
+      this.resetCounters();
     }
   }
 
-  resetCount = () => {
+  resetCounters = () => {
     this.setState( prevState => {
       return {
         reel1:{ ...prevState.reel1, counter: 0 },
@@ -103,22 +101,26 @@ class App extends React.Component {
 
   spinCycle = () => {
     this.reel1spin = setInterval(this.spinReel1once, 100, this.state.content);
-    this.reel2spin = setInterval(this.spinReel2once, 110, this.state.content);
-    this.reel3spin = setInterval(this.spinReel3once, 130, this.state.content);
+    this.reel2spin = setInterval(this.spinReel2once, 90, this.state.content);
+    this.reel3spin = setInterval(this.spinReel3once, 105, this.state.content);
+  }
+
+  randomNumber = () => {
+    return Math.floor(Math.random() * (20 - 10) + 10);
   }
 
   spinAmount = (thisAmount) => {
     this.setState({
       reel1: {...this.state.reel1, numberOfSpins: thisAmount},
-      reel2: {...this.state.reel2, numberOfSpins: thisAmount+4},
-      reel3: {...this.state.reel3, numberOfSpins: thisAmount+3},
+      reel2: {...this.state.reel2, numberOfSpins: thisAmount + this.randomNumber()},
+      reel3: {...this.state.reel3, numberOfSpins: thisAmount + this.randomNumber()},
     }, this.spinCycle());
   }
 
   render() {
-      console.log(this.state.reel1,
-                this.state.reel2,
-                this.state.reel3);
+   console.log(this.state.reel1,
+               this.state.reel2,
+               this.state.reel3);
     return (
       <main>
         <header>
@@ -136,7 +138,7 @@ class App extends React.Component {
 }
 
 /*================================
-          SLOT pres. component
+      SLOT pres. component
 ================================*/
 const Slot = ({result}) => {
   return (
@@ -152,7 +154,7 @@ const Slot = ({result}) => {
 class SpinButton extends React.Component {
   // sets number of spins in App state
   handleSpin = () => {
-    let thisAmount = Math.floor(Math.random() * (36 - 6 + 1) + 6);
+    let thisAmount = Math.floor(Math.random() * (36 - 20) + 20);
     this.props.spinAmount(thisAmount);
   }
 
