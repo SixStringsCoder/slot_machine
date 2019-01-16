@@ -1,68 +1,69 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## React Slot Machine
 
-## Available Scripts
+#### Introduction
 
-In the project directory, you can run:
+**Title**: React Slot Machine
 
-### `npm start`
+This project focus is to build a slot machine using React components.
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+***The goal*** of the project is to build a slot machine using React; each reel extracts content from a short array that is looped through in-order.  The first slot reel was built with jQuery and CSS then refactored into React components, after which slot 2 and slot 3 were added. All reels are monitored in State keeping track of number-of-spins which, with the help of Math.random functions, helps to determine when each reel successively stops: reel1, reel2, then reel3.
 
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
+![sample](./screenshots/slot_machineUI.png)
 
-### `npm test`
+<hr />
+##### Start-up Server
 
-Launches the test runner in the interactive watch mode.<br>
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+To run the server, NPM or Yarn must be installed.
 
-### `npm run build`
+Open up the terminal and go to the project directory.  Inside of the project directory, run:
 
-Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
+`npm install`
 
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
+`npm start`
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+If you have Yarn installed run:
 
-### `npm run eject`
+`yarn start`
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+This project was built using *Create React App*.  For complete technical details click [Create React App](./docs/README.md)
+<hr />
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+##### Technical Components
+- Flexbox  
+- Media queries used to build the *responsive design*.
+- JavaScript (ECMASript 6)
+- React 16.5.2
+- Accessibility-ready
 
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+##### Articles and Tutorials
+<!-- [Based on this javascript lesson at Code Academy but expanded to React for practice.](https://www.codecademy.com/learn/introduction-to-javascript) -->
 
-## Learn More
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+#### Picture of React Component Map
+<!-- ![breakdown](./screenshots/Kelvin_CompMap.jpeg) -->
 
-To learn React, check out the [React documentation](https://reactjs.org/).
 
-### Code Splitting
+#### Pictures of Responsive Design
+##### Phone
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
+<!-- ![phone view](./screenshots/phone.png) -->
 
-### Analyzing the Bundle Size
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
+##### Tablet
+<!-- ![tablet view](./screenshots/tablet.png) -->
 
-### Making a Progressive Web App
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
+##### Desktop
+<!-- ![desktop view](./screenshots/desktop.png) -->
 
-### Advanced Configuration
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
+#### Planning and Workflow
+1. Develop first static reel
+ * make static HTML page for basic design
+    * Use HTML input to get Kelvin temperature
 
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+    * Render equation results in a sentence along with image matching the temperature result.
+2. Add jQuery to "spin" through the array with results showing on DOM.
+<!-- 3. break UI into React components --> 
+<!-- [See component map above](#picture-of-react-component-map) -->

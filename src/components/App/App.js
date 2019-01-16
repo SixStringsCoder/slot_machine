@@ -1,19 +1,11 @@
 import React, { Component } from 'react';
 import './App.css';
+import { slotChoices } from '../utility/content';
+import Slot from '../Slot/Slot';
+import SpinButton from '../SpinButton/SpinButton';
 
-const slotChoices = [
-  "cherry",
-  "banana",
-  "coconut",
-  "apple",
-  "durian",
-  "grape"
-];
 
-/*================================
-      APP - parent component
-================================*/
-class App extends React.Component {
+class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -133,38 +125,6 @@ class App extends React.Component {
         </section>
         <SpinButton spinAmount={this.spinAmount} />
       </main>
-    );
-  }
-}
-
-/*================================
-      SLOT pres. component
-================================*/
-const Slot = ({result}) => {
-  return (
-    <div className="slot-object">
-      <p className="reel-obj">{result}</p>
-    </div>
-  );
-}
-
-/*================================
-        BUTTON component
-================================*/
-class SpinButton extends React.Component {
-  // sets number of spins in App state
-  handleSpin = () => {
-    let thisAmount = Math.floor(Math.random() * (36 - 20) + 20);
-    this.props.spinAmount(thisAmount);
-  }
-
-  render() {
-    return (
-      <div id="spinBtnContainer">
-        <button type="submit"
-          id="spinnerBtn"
-          onClick={this.handleSpin}>Spin</button>
-      </div>
     );
   }
 }
