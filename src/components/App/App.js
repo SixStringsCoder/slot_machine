@@ -3,6 +3,10 @@ import './App.css';
 import { slotChoices } from '../utility/content';
 import Slot from '../Slot/Slot';
 import SpinButton from '../SpinButton/SpinButton';
+import reelSpin from './audio/reel_spin.mp3';
+import reelStop from './audio/crash.mp3';
+import winner from './audio/winner.mp3';
+
 
 
 class App extends Component {
@@ -17,8 +21,27 @@ class App extends Component {
     this.reel1spin = null;
     this.reel2spin = null;
     this.reel3spin = null;
+    this.reelSpin = new Audio(reelSpin);
+    this.winningSFX = new Audio(winner);
   }
 
+  stopSFX = () => {
+    this.reelStop = new Audio(reelStop);
+    this.reelStop.volume = 0.3;
+    this.reelStop.play();
+  }
+
+  spinSFX = () => {
+    this.reelSpin.currentTime = 0;
+    this.reelSpin.volume = 0.3;
+    this.reelSpin.play();
+  }
+
+  winSFX = () => {
+    this.winningSFX.currentTime = 0;
+    this.winningSFX.play();
+
+  }
 
   spinReel1once = (arr) => {
     arr = this.state.content;
@@ -37,6 +60,8 @@ class App extends Component {
 
     if (this.state.reel1.counter >= this.state.reel1.numberOfSpins) {
       clearInterval(this.reel1spin);
+      this.stopSFX();
+
     }
   }
 
@@ -57,6 +82,7 @@ class App extends Component {
 
     if (this.state.reel2.counter >= this.state.reel2.numberOfSpins) {
       clearInterval(this.reel2spin);
+      this.stopSFX();
     }
   }
 
@@ -77,9 +103,16 @@ class App extends Component {
 
     if (this.state.reel3.counter >= this.state.reel3.numberOfSpins) {
       clearInterval(this.reel3spin);
+      this.stopSFX();
+      this.reelSpin.pause();
       this.resetCounters();
+      if (this.state.reel1.pick === this.state.reel2.pick && this.state.reel2.pick === this.state.reel3.pick) {
+        this.winSFX();
+      }
     }
+
   }
+
 
   resetCounters = () => {
     this.setState( prevState => {
@@ -95,6 +128,11 @@ class App extends Component {
     this.reel1spin = setInterval(this.spinReel1once, 100, this.state.content);
     this.reel2spin = setInterval(this.spinReel2once, 90, this.state.content);
     this.reel3spin = setInterval(this.spinReel3once, 105, this.state.content);
+    this.reelSpin.volume = 0.3;
+    if (this.winningSFX.play()) {
+      this.winningSFX.pause();
+      this.spinSFX();
+    }
   }
 
   randomNumber = () => {
