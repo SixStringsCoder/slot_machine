@@ -5,7 +5,7 @@ main {
   flex: 1;
   justify-content: space-around;
   align-items: center;
-  background-image: radial-gradient(yellow, green);
+  /* background-image: radial-gradient(yellow, green); */
 }
 
 #title {

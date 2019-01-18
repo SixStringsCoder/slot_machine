@@ -7,6 +7,10 @@ import reelSpin from './audio/reel_spin.mp3';
 import reelStop from './audio/crash.mp3';
 import winner from './audio/winner.mp3';
 
+// let bgColor = {
+//   backgroundImage: "none",
+//   backgroundColor: {this.state.bgColor},
+// }
 
 
 class App extends Component {
@@ -16,7 +20,9 @@ class App extends Component {
       content: slotChoices,
       reel1: {pick: "apple", index: 0, counter: 0, numberOfSpins: 12},
       reel2: {pick: "coconut", index: 0, counter: 0, numberOfSpins: 16},
-      reel3: {pick: "durian", index: 0, counter: 0, numberOfSpins: 20}
+      reel3: {pick: "durian", index: 0, counter: 0, numberOfSpins: 20},
+      jackpot: false,
+      bgColor: "rgb(255, 254, 253)",
     }
     this.reel1spin = null;
     this.reel2spin = null;
@@ -25,23 +31,44 @@ class App extends Component {
     this.winningSFX = new Audio(winner);
   }
 
+  /*++++++++++++++++++*/
+  /*     METHODS      */
+  /*++++++++++++++++++*/
   stopSFX = () => {
     this.reelStop = new Audio(reelStop);
-    this.reelStop.volume = 0.3;
+    this.reelStop.volume = 0.2;
     this.reelStop.play();
   }
 
   spinSFX = () => {
     this.reelSpin.currentTime = 0;
-    this.reelSpin.volume = 0.3;
+    this.reelSpin.volume = 0.15;
     this.reelSpin.play();
   }
 
   winSFX = () => {
     this.winningSFX.currentTime = 0;
     this.winningSFX.play();
-
   }
+
+  startColorShow = () => {
+  let count = 0;
+  const winningColors = () => {
+    if (count === 105) {
+      clearInterval(colorShow);
+      this.resetCounters();
+    } else {
+      count += 1;
+      let red = Math.floor(Math.random() * 256);
+      let green = Math.floor(Math.random() * 256);
+      let blue = Math.floor(Math.random() * 256);
+      this.setState({
+        bgColor: `rgb(${red}, ${green}, ${blue})`
+      });
+    }
+  }
+  const colorShow = setInterval(winningColors, 100);
+}
 
   spinReel1once = (arr) => {
     arr = this.state.content;
@@ -107,10 +134,11 @@ class App extends Component {
       this.reelSpin.pause();
       this.resetCounters();
       if (this.state.reel1.pick === this.state.reel2.pick && this.state.reel2.pick === this.state.reel3.pick) {
+        this.setState({jackpot: true})
         this.winSFX();
+        this.startColorShow();
       }
     }
-
   }
 
 
@@ -119,7 +147,8 @@ class App extends Component {
       return {
         reel1:{ ...prevState.reel1, counter: 0 },
         reel2:{ ...prevState.reel2, counter: 0 },
-        reel3:{ ...prevState.reel3, counter: 0 }
+        reel3:{ ...prevState.reel3, counter: 0 },
+        jackpot: false,
       } //end return
     });
   }
@@ -141,18 +170,18 @@ class App extends Component {
 
   spinAmount = (thisAmount) => {
     this.setState({
-      reel1: {...this.state.reel1, numberOfSpins: thisAmount},
-      reel2: {...this.state.reel2, numberOfSpins: thisAmount + this.randomNumber()},
-      reel3: {...this.state.reel3, numberOfSpins: thisAmount + this.randomNumber()},
+      reel1: { ...this.state.reel1, numberOfSpins: thisAmount },
+      reel2: { ...this.state.reel2, numberOfSpins: thisAmount + this.randomNumber() },
+      reel3: { ...this.state.reel3, numberOfSpins: thisAmount + this.randomNumber() },
     }, this.spinCycle());
   }
 
   render() {
-   console.log(this.state.reel1,
-               this.state.reel2,
-               this.state.reel3);
+   // console.log(this.state.reel1,
+   //             this.state.reel2,
+   //             this.state.reel3);
     return (
-      <main>
+      <main style={ this.state.jackpot ? {backgroundColor: this.state.bgColor} : {backgroundImage: "radial-gradient(yellow, green)"} }>
         <header>
           <h1 id="title">Lost Wages</h1>
         </header>
