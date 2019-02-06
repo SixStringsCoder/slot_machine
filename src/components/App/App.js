@@ -7,35 +7,28 @@ import reelSpin from './audio/reel_spin.mp3';
 import reelStop from './audio/crash.mp3';
 import winner from './audio/winner.mp3';
 
-// let bgColor = {
-//   backgroundImage: "none",
-//   backgroundColor: {this.state.bgColor},
-// }
-
-
-class App extends Component {
+class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       content: slotChoices,
-      reel1: {pick: "apple", index: 0, counter: 0, numberOfSpins: 12},
-      reel2: {pick: "coconut", index: 0, counter: 0, numberOfSpins: 16},
-      reel3: {pick: "durian", index: 0, counter: 0, numberOfSpins: 20},
+      pick1: "apple",
+      pick2: "apple",
+      pick3: "apple",
       jackpot: false,
       bgColor: "rgb(255, 254, 253)",
     }
-    this.reel1spin = null;
-    this.reel2spin = null;
-    this.reel3spin = null;
-    this.reelSpin = new Audio(reelSpin);
-    this.winningSFX = new Audio(winner);
+
+    this.reelSpin = new Audio('https://raw.githubusercontent.com/SixStringsCoder/slot_machine/master/src/components/App/audio/reel_spin.mp3');
+    this.winningSFX = new Audio('https://raw.githubusercontent.com/SixStringsCoder/slot_machine/master/src/components/App/audio/winner.mp3');
   }
 
-  /*++++++++++++++++++*/
-  /*     METHODS      */
-  /*++++++++++++++++++*/
+  /*++++++++++++++++++++++++*/
+  /*     Audio METHODS      */
+  /*++++++++++++++++++++++++*/
   stopSFX = () => {
-    this.reelStop = new Audio(reelStop);
+    // instantiating here, multiple stopSFX can play successively
+    this.reelStop = new Audio('https://raw.githubusercontent.com/SixStringsCoder/slot_machine/master/src/components/App/audio/crash.mp3');
     this.reelStop.volume = 0.2;
     this.reelStop.play();
   }
@@ -44,6 +37,7 @@ class App extends Component {
     this.reelSpin.currentTime = 0;
     this.reelSpin.volume = 0.15;
     this.reelSpin.play();
+    this.reelSpin.loop = true;
   }
 
   winSFX = () => {
@@ -56,7 +50,6 @@ class App extends Component {
   const winningColors = () => {
     if (count === 105) {
       clearInterval(colorShow);
-      this.resetCounters();
     } else {
       count += 1;
       let red = Math.floor(Math.random() * 256);
@@ -64,133 +57,133 @@ class App extends Component {
       let blue = Math.floor(Math.random() * 256);
       this.setState({
         bgColor: `rgb(${red}, ${green}, ${blue})`
-      });
+      }, console.log("color change"));
     }
   }
   const colorShow = setInterval(winningColors, 100);
 }
 
-  spinReel1once = (arr) => {
-    arr = this.state.content;
-    this.setState( prevState => {
-      return {
-        reel1:
-          { ...prevState.reel1,
-            pick: arr[this.state.reel1.index],
-            counter: prevState.reel1.counter + 1,
-            index: prevState.reel1.index < arr.length - 1 ?
-            prevState.reel1.index + 1
-            :
-            0 }
-      } //end return
-    });
+/*++++++++++++++++++++++++*/
+/*     Reel METHODS      */
+/*++++++++++++++++++++++++*/
 
-    if (this.state.reel1.counter >= this.state.reel1.numberOfSpins) {
-      clearInterval(this.reel1spin);
-      this.stopSFX();
+  spinReel1Cycle = (amountOfSpins) => {
+    let arr = this.state.content;
+    let counter = 0;
+    let index = 0;
 
-    }
-  }
+    // console.log(arr, amountOfSpins, counter, index);
 
-  spinReel2once = (arr) => {
-    arr = this.state.content;
-    this.setState( prevState => {
-      return {
-        reel2:
-          { ...prevState.reel2,
-            pick: arr[this.state.reel2.index],
-            counter: prevState.reel2.counter + 1,
-            index: prevState.reel2.index < arr.length - 1 ?
-            prevState.reel2.index + 1
-            :
-            0 }
-      } //end return
-    });
-
-    if (this.state.reel2.counter >= this.state.reel2.numberOfSpins) {
-      clearInterval(this.reel2spin);
-      this.stopSFX();
-    }
-  }
-
-  spinReel3once = (arr) => {
-    arr = this.state.content;
-    this.setState( prevState => {
-      return {
-        reel3:
-          { ...prevState.reel3,
-            pick: arr[this.state.reel3.index],
-            counter: prevState.reel3.counter + 1,
-            index: prevState.reel3.index < arr.length - 1 ?
-            prevState.reel3.index + 1
-            :
-            0 }
-      } //end return
-    });
-
-    if (this.state.reel3.counter >= this.state.reel3.numberOfSpins) {
-      clearInterval(this.reel3spin);
-      this.stopSFX();
-      this.reelSpin.pause();
-      this.resetCounters();
-      if (this.state.reel1.pick === this.state.reel2.pick && this.state.reel2.pick === this.state.reel3.pick) {
-        this.setState({jackpot: true})
-        this.winSFX();
-        this.startColorShow();
+    this.spinReelOnce = () => {
+      if (counter === amountOfSpins) {
+        this.stopSFX();
+        console.log(`Reel 1 finished ${amountOfSpins} spins`);
+        clearInterval(reelspin);
+      } else {
+        this.setState( prevState => {
+          return {
+            pick1: arr[index]
+          }
+        }); //end setState
+        counter += 1;
+        index < arr.length-1 ? index += 1 : index = 0;
       }
-    }
+    } // end spinReelOnce function
+    let reelspin = setInterval(this.spinReelOnce, 100);
+  } // end spinReel1Cycle function
+
+
+
+  spinReel2Cycle = (amountOfSpins) => {
+    const arr = this.state.content;
+    let counter = 0;
+    let index = 0;
+    // console.log(arr, amountOfSpins, counter, index);
+
+    this.spinReelOnce = () => {
+      if (counter === amountOfSpins) {
+        this.stopSFX();
+        clearInterval(reelspin);
+        console.log(`Reel 2 finished ${amountOfSpins} spins`);
+      } else {
+        this.setState( prevState => {
+          return {
+            pick2: arr[index],
+          }
+        }); //end setState
+        counter+=1;
+        index < arr.length-1 ? index += 1 : index = 0;
+      }
+    } // end spinReelOnce function
+    let reelspin = setInterval(this.spinReelOnce, 100);
+  } // end spinReel2Cycle function
+
+
+  spinReel3Cycle = (amountOfSpins) => {
+    const arr = this.state.content;
+    let counter = 0;
+    let index = 0;
+    console.log(amountOfSpins, "count: " + counter);
+
+    this.spinReelOnce = () => {
+      if (counter === amountOfSpins) {
+        this.stopSFX();
+        this.reelSpin.pause();
+        clearInterval(reelspin);
+        console.log(`Reel 3 finished ${amountOfSpins} spins`);
+          // if Jackpot
+          if (this.state.pick1 === this.state.pick2 && this.state.pick2 === this.state.pick3) {
+            this.setState({jackpot: true})
+            this.winSFX();
+            this.startColorShow();
+          }
+      } else {
+        this.setState( prevState => {
+          return {
+            pick3: arr[index],
+          }
+        }); //end setState
+        counter+=1;
+        index < arr.length-1 ? index += 1 : index = 0;
+      }
+    } // end spinReelOnce function
+    let reelspin = setInterval(this.spinReelOnce, 100);
+  } // end spinReel3Cycle function
+
+
+ // Helps to randomize when reel2 and reel3 finish after reel1
+  randomNumber = () => {
+    return Math.floor((Math.random() * 20) + 10);
   }
 
-
-  resetCounters = () => {
-    this.setState( prevState => {
-      return {
-        reel1:{ ...prevState.reel1, counter: 0 },
-        reel2:{ ...prevState.reel2, counter: 0 },
-        reel3:{ ...prevState.reel3, counter: 0 },
-        jackpot: false,
-      } //end return
-    });
-  }
-
-  spinCycle = () => {
-    this.reel1spin = setInterval(this.spinReel1once, 100, this.state.content);
-    this.reel2spin = setInterval(this.spinReel2once, 90, this.state.content);
-    this.reel3spin = setInterval(this.spinReel3once, 105, this.state.content);
+  // Callback function after 'Spin' button is clicked
+  startSpinCycle = (thisAmount) => {
+    console.log(thisAmount);
+    this.spinReel1Cycle(thisAmount);
+    this.spinReel2Cycle(thisAmount + this.randomNumber());
+    this.spinReel3Cycle(thisAmount + 10 + this.randomNumber());
+    // audio
     this.reelSpin.volume = 0.3;
-    if (this.winningSFX.play()) {
+    this.spinSFX();
+    if (this.winningSFX.ended = false) {
       this.winningSFX.pause();
       this.spinSFX();
     }
   }
 
-  randomNumber = () => {
-    return Math.floor(Math.random() * (20 - 10) + 10);
-  }
-
-  spinAmount = (thisAmount) => {
-    this.setState({
-      reel1: { ...this.state.reel1, numberOfSpins: thisAmount },
-      reel2: { ...this.state.reel2, numberOfSpins: thisAmount + this.randomNumber() },
-      reel3: { ...this.state.reel3, numberOfSpins: thisAmount + this.randomNumber() },
-    }, this.spinCycle());
-  }
-
   render() {
-   // console.log(this.state.reel1,
-   //             this.state.reel2,
-   //             this.state.reel3);
+    // console.log(this.state.pick1, this.state.pick2, this.state.pick3);
     return (
       <main style={ this.state.jackpot ? {backgroundColor: this.state.bgColor} : {backgroundImage: "radial-gradient(yellow, green)"} }>
         <header>
-          <h1 id="title">Lost Wages</h1>
+          <h1 id="title">{this.state.jackpot ? "JACKPOT!" : "Lost Wages"}</h1>
         </header>
         <section className="spindle">
-          <Slot result={this.state.reel1.pick} />
-          <Slot result={this.state.reel2.pick} />
-          <Slot result={this.state.reel3.pick} />
+          <Slot result={this.state.pick1} />
+          <Slot result={this.state.pick2} />
+          <Slot result={this.state.pick3} />
         </section>
-        <SpinButton spinAmount={this.spinAmount} />
+        <SpinButton spinAmount={this.startSpinCycle} />
       </main>
     );
   }
