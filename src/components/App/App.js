@@ -29,7 +29,7 @@ class App extends React.Component {
   stopSFX = () => {
     // instantiating here, multiple stopSFX can play successively
     this.reelStop = new Audio('https://raw.githubusercontent.com/SixStringsCoder/slot_machine/master/src/components/App/audio/crash.mp3');
-    this.reelStop.volume = 0.2;
+    this.reelStop.volume = 0.19;
     this.reelStop.play();
   }
 
@@ -45,11 +45,12 @@ class App extends React.Component {
     this.winningSFX.play();
   }
 
-  startColorShow = () => {
+startColorShow = () => {
   let count = 0;
   const winningColors = () => {
     if (count === 105) {
       clearInterval(colorShow);
+      this.endColorShow();
     } else {
       count += 1;
       let red = Math.floor(Math.random() * 256);
@@ -57,11 +58,19 @@ class App extends React.Component {
       let blue = Math.floor(Math.random() * 256);
       this.setState({
         bgColor: `rgb(${red}, ${green}, ${blue})`
-      }, console.log("color change"));
+      });
     }
   }
   const colorShow = setInterval(winningColors, 100);
 }
+
+ endColorShow = () => {
+   this.setState(prevState => {
+     return {
+       jackpot: false
+     }
+   });
+ }
 
 /*++++++++++++++++++++++++*/
 /*     Reel METHODS      */
@@ -71,9 +80,7 @@ class App extends React.Component {
     let arr = this.state.content;
     let counter = 0;
     let index = 0;
-
     // console.log(arr, amountOfSpins, counter, index);
-
     this.spinReelOnce = () => {
       if (counter === amountOfSpins) {
         this.stopSFX();
@@ -99,7 +106,6 @@ class App extends React.Component {
     let counter = 0;
     let index = 0;
     // console.log(arr, amountOfSpins, counter, index);
-
     this.spinReelOnce = () => {
       if (counter === amountOfSpins) {
         this.stopSFX();
@@ -127,9 +133,9 @@ class App extends React.Component {
 
     this.spinReelOnce = () => {
       if (counter === amountOfSpins) {
+        clearInterval(reelspin);
         this.stopSFX();
         this.reelSpin.pause();
-        clearInterval(reelspin);
         console.log(`Reel 3 finished ${amountOfSpins} spins`);
           // if Jackpot
           if (this.state.pick1 === this.state.pick2 && this.state.pick2 === this.state.pick3) {
@@ -161,11 +167,11 @@ class App extends React.Component {
     console.log(thisAmount);
     this.spinReel1Cycle(thisAmount);
     this.spinReel2Cycle(thisAmount + this.randomNumber());
-    this.spinReel3Cycle(thisAmount + 10 + this.randomNumber());
+    this.spinReel3Cycle(thisAmount + 12 + this.randomNumber());
     // audio
     this.reelSpin.volume = 0.3;
     this.spinSFX();
-    if (this.winningSFX.ended = false) {
+    if (this.winningSFX.ended === false) {
       this.winningSFX.pause();
       this.spinSFX();
     }
