@@ -3,11 +3,9 @@ import './App.css';
 import { slotChoices } from '../utility/content';
 import Slot from '../Slot/Slot';
 import SpinButton from '../SpinButton/SpinButton';
-import reelSpin from './audio/reel_spin.mp3';
-import reelStop from './audio/crash.mp3';
-import winner from './audio/winner.mp3';
 
-class App extends React.Component {
+
+class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -45,32 +43,34 @@ class App extends React.Component {
     this.winningSFX.play();
   }
 
-startColorShow = () => {
-  let count = 0;
-  const winningColors = () => {
-    if (count === 105) {
-      clearInterval(colorShow);
-      this.endColorShow();
-    } else {
-      count += 1;
-      let red = Math.floor(Math.random() * 256);
-      let green = Math.floor(Math.random() * 256);
-      let blue = Math.floor(Math.random() * 256);
-      this.setState({
-        bgColor: `rgb(${red}, ${green}, ${blue})`
-      });
-    }
+  // Helps startColorShow effect
+  randomColor = () => {
+    return Math.floor(Math.random() * 256);
   }
-  const colorShow = setInterval(winningColors, 100);
-}
 
- endColorShow = () => {
-   this.setState(prevState => {
-     return {
-       jackpot: false
-     }
-   });
- }
+  startColorShow = () => {
+    let count = 0;
+    const winningColors = () => {
+      if (count === 105) {
+        clearInterval(colorShow);
+        this.endColorShow();
+      } else {
+        count += 1;
+        this.setState({
+          bgColor: `rgb(${this.randomColor()}, ${this.randomColor()}, ${this.randomColor()})`
+        });
+      }
+    }
+    const colorShow = setInterval(winningColors, 100);
+  }
+
+   endColorShow = () => {
+     this.setState(prevState => {
+       return {
+         jackpot: false
+       }
+     });
+   }
 
 /*++++++++++++++++++++++++*/
 /*     Reel METHODS      */
